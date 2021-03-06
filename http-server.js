@@ -20,12 +20,9 @@ var server = http.createServer(function onRequest (req, res) {
   _favicon(req, res, function onNext (err) {
     if (err) return done(err)
 
-    // continue to process the request here, etc.
     if (req.method.toLowerCase() == 'get') {
-        res.writeHead(200, {
-            "X-Powered-By": "HTTP 1.1 Server"
-        });
-        res.write('You are using GET method.');
+        handleSuccessResponse(res);
+        res.write('You are using GET method.\n');
         res.end();
     }
     else if (req.method.toLowerCase() == 'post') {
@@ -35,11 +32,8 @@ var server = http.createServer(function onRequest (req, res) {
                 console.log(error.message);
                 return;
             }
-            res.writeHead(200, {
-                "Content-": "text/plain",
-                "X-Powered-By": "HTTP 1.1 Server"
-            });
-            res.write('You are using POST method.');
+            handleSuccessResponse(res);
+            res.write('You are using POST method.\n');
             res.end(util.inspect({fields:fields, files:files}));
         });
     }
@@ -47,11 +41,7 @@ var server = http.createServer(function onRequest (req, res) {
         res.write('You are using Other method.');
         res.end();
     }
-    //////////////////////
-    console.log("Request url:", req.url)
-    console.log("Request method:", req.method)
-    console.log("Response code:", res.statusCode)
-
+    printLogMessage(req, res);
   })
 })
 
@@ -62,3 +52,20 @@ server.listen(port, hostname, function(error) {
         console.log(`Server running on http://${hostname}:${port}`);
     }
 });
+
+function handleSuccessResponse(res) {
+    res.writeHead(200, {
+        "Content-Type": "text/plain",
+        "X-Powered-By": "HTTP 1.1 Web Server"
+    });
+}
+
+function printLogMessage(req, res) {
+    console.log(
+        `Method: "${req.method}", ` + 
+        `URL: "${req.url}", ` +
+        `Status Code: "${res.statusCode}", ` +
+        `Status: "${res.statusMessage}"`
+        );
+
+}
