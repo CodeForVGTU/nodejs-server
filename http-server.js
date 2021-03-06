@@ -5,7 +5,10 @@ const hostname = '127.0.0.1';
 const port = 3000;
 
 const server = createServer(function(req, res) {
-    res.writeHead(200, { 'Content-Type': 'text/html' });
+    res.writeHead(200, {
+        'Content-Type': 'text/html',
+        'X-Powered-By': 'HTTP 1.1 Server'
+    });
     readFile('index.html', function(error, data) {
         if (error) {
             res.writeHead(404);
